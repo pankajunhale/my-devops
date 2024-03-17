@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  mysqlDb:
+    image: pankajmunhale/mysql-8:01
+    cap_add:
+      - SYS_NICE
+    restart: always
+    volumes:
+      - ./scripts/schema.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./scripts/data.sql:/docker-entrypoint-initdb.d/2.sql
+      - mysql-userinfo-data:/var/lib/mysql
+    container_name: "mysqlDb"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+
+volumes:
+  mysql-userinfo-data:
+    driver: local
